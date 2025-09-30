@@ -60,9 +60,10 @@ int* car_control(int cha1, int cha2, int cha3, int cha4, int cha5) {
         if (LeftSpeed  < -Speedrange) LeftSpeed  = -Speedrange;
     }
 
-    static int ctrlValue[2] = {0, 0};
+    static int ctrlValue[3] = {0, 0, 0};
     ctrlValue[0] = RightSpeed;
     ctrlValue[1] = LeftSpeed;
+    ctrlValue[2] = PoleLength;
 
     return ctrlValue;
 }

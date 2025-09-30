@@ -21,6 +21,17 @@ int elevatorPWMChannel = 2;
 int throttlePWMChannel = 3;
 int rudderPWMChannel = 4;
 
+// change number here
+static constexpr gpio_num_t MOTORr_PIN = GPIO_NUM_27;
+static constexpr gpio_num_t MOTORl_PIN = GPIO_NUM_27;
+static constexpr dshot_mode_t DSHOT_MODE = dshot_mode_t::DSHOT600;
+static constexpr auto IS_BIDIRECTIONAL = true;
+static constexpr auto MOTORr_MAGNET_COUNT = 14;
+static constexpr auto MOTORl_MAGNET_COUNT = 14;
+// change number here
+
+DShotRMT motorRight(MOTORr_PIN, DSHOT_MODE, IS_BIDIRECTIONAL, MOTORr_MAGNET_COUNT);
+DShotRMT motorLeft(MOTORl_PIN, DSHOT_MODE, IS_BIDIRECTIONAL, MOTORl_MAGNET_COUNT);
 
 void SetServoPos(float percent, int pwmChannel)
 {
@@ -62,6 +73,28 @@ void loop() { //Choose Serial1 or Serial2 as required
       int throttleMapped = map(_raw_rc_values[2], 1000, 2000, 0, 100);
       int rudderMapped = map(_raw_rc_values[3], 1000, 2000, 0, 100);
       int switchMapped = map(_raw_rc_values[4], 1000, 2000, 0, 100);
+
+
+      // [0] = right speed [1] = left speed [2] = pole length
+      int* ctrlValue;
+      ctrlValue = car_control(_raw_rc_values[0], _raw_rc_values[1], _raw_rc_values[2], _raw_rc_values[3], _raw_rc_values[4]);
+
+      if (ctrlValue[0] < 0) {
+        motorRight.setMotorSpinDirection(1);
+        motorRight.sendThrottlePercent(-ctrlValue[0]);
+      } else {
+        motorRight.setMotorSpinDirection(0);
+        motorRight.sendThrottlePercent(ctrlValue[0]);
+      }
+
+      if (ctrlValue[1] < 0) {
+        motorLeft.setMotorSpinDirection(1);
+        motorLeft.sendThrottlePercent(-ctrlValue[1]);
+      } else {
+        motorLeft.setMotorSpinDirection(0);
+        motorLeft.sendThrottlePercent(ctrlValue[1]);
+      }
+
 
       SetServoPos(aileronsMapped, aileronsPWMChannel);
       SetServoPos(elevatorMapped, elevatorPWMChannel);
