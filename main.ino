@@ -13,7 +13,7 @@ uint16_t _raw_rc_count{};
 
 int aileronsPin = 12;
 int elevatorPin = 13;
-int throttlePin = 14;
+int throttlePin = 14; // 123
 int rudderPin = 15;
 
 int aileronsPWMChannel = 1;
