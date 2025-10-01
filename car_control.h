@@ -14,13 +14,13 @@
 #define WeelRadius  10 
 #define poleMax     100
 
-#define Speedrange 255
+#define Speedrange 100.0
 #define viewDegreeMax 3.1415926 / 8
 //======================================
 
-int GasValue = 0;       // range 0~100
-int RightWheelFix = 0;   // range -100~100
-int LeftWheelFix = 0;    // range -100~100
+float GasValue = 0;       // range 0~100
+float RightWheelFix = 0;   // range -100~100
+float LeftWheelFix = 0;    // range -100~100
 
 float viewDegree;         
 
@@ -28,15 +28,15 @@ float viewDegree;
 
 int PoleLength;
 
-int RightSpeed;         // output range -100~100
-int LeftSpeed;
+float RightSpeed;         // output range -100~100
+float LeftSpeed;
 bool GoBackward = 0;
 // cha1 = Gas
 // cha2 = turn
 // cha3 = up/down
 // cha4 = right/left (no use)
 // cha4 = baku
-int* car_control(int cha1, int cha2, int cha3, int cha4, int cha5) {
+float* car_control(int cha1, int cha2, int cha3, int cha4, int cha5) {
     GasValue = (((cha1 - levelMin) / levelGap)) * Speedrange;
 
     RightWheelFix = -((cha2 - levelMid) / (levelGap / 2) * Speedrange);
@@ -60,10 +60,9 @@ int* car_control(int cha1, int cha2, int cha3, int cha4, int cha5) {
         if (LeftSpeed  < -Speedrange) LeftSpeed  = -Speedrange;
     }
 
-    static int ctrlValue[3] = {0, 0, 0};
+    static float ctrlValue[2] = {0, 0};
     ctrlValue[0] = RightSpeed;
     ctrlValue[1] = LeftSpeed;
-    ctrlValue[2] = PoleLength;
 
     return ctrlValue;
 }
